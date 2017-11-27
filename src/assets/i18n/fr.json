@@ -1,0 +1,15 @@
+{
+    "traffic": "Ventes de trafic",
+    "Dashboard" : "Tableau de bord",
+    "Customers" : "Les clients",
+    "Orders" : "Ordres",
+    "Developments" : "Développements",
+    "Settings" :"Paramètres",
+    "Users" : "Utilisateurs",
+    "Notifications" : "Notifications",
+    "Login" : "S'identifier",
+    "Sign In to your account" : "Connectez-vous à votre compte",
+    "Forgot password" : "mot de passe oublié",
+    "Search" : "Chercher...",
+    "Unable to login with provided credentials." : "Impossible de se connecter avec les informations d'identification fournies"
+}

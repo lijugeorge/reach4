@@ -1,0 +1,279 @@
+<form [ngSwitch]="loading" [formGroup]="customerForm" (ngSubmit)="onSubmit(customerForm.value)" class="form-horizontal" method="post">
+    <div *ngSwitchCase="true">
+        <!-- <overlay-loader></overlay-loader> -->
+    </div>
+    <div *ngSwitchCase="false">
+        <div class="row m-btm10">
+            <div class="col-md-3">
+                <label for="company_name">Company Name <small class="text-danger">*</small></label>
+                <input type="text" id="company_name" class="form-control" [formControl]="customerForm.controls['company_name']" />
+                <small *ngIf="customerForm.controls['company_name'].hasError('required') && (customerForm.controls['company_name'].touched || formSubmited)" class="text-danger">Company name is required.</small>
+                <small *ngIf="!customerForm.controls['company_name'].hasError('required') && customerForm.controls['company_name'].hasError('noWhitespace') && customerForm.controls['company_name'].touched" class="error">Remove white space.</small>
+                <small *ngFor="let error of error.company_name" class="text-danger">{{error}}</small>
+            </div>
+            <div class="col-md-2">
+                <label for="company_code">Company Id</label>
+                <input type="text" id="company_code" class="form-control" [formControl]="customerForm.controls['company_code']">
+                <small *ngFor="let error of error.company_code" class="text-danger">{{error}}</small>
+            </div>
+            <div class="col-md-2">
+                <label for="credit_term">Terms <small class="text-danger">*</small></label>
+                <select id="credit_term" class="form-control" [formControl]="customerForm.controls['credit_term']">
+                    <option value="">Select</option>
+                    <option *ngFor="let item of orderOptions.credit_terms" [value]="item.id" >{{item.name}}</option>
+                </select>
+                <small *ngIf="customerForm.controls['credit_term'].hasError('required') && (customerForm.controls['credit_term'].touched|| formSubmited)" class="text-danger">Credit term is required.</small>
+                <small *ngFor="let error of error.credit_term" class="text-danger">{{error}}</small>
+            </div>
+        </div>
+        <div class="panel-heading bg-dark">Contact Information</div>
+        <div class="contact_info_wrapper" formArrayName="contacts">
+            <div class="contact_info_block bordered-block" *ngFor="let contact of customerForm.controls.contacts.controls; let i=index">
+                <h6>Contact {{i+1}} <i [ngClass]="{'invisible': (i==0)}" class="fa fa-trash" (click)="deleteContact(i)" title="Remove"><span>Remove</span></i></h6>
+                <div class="row m-btm15" [formGroupName]="i">
+                    <div class="col-md-3 m-btm10">
+                        <label for="first_name">First Name <small class="text-danger">*</small></label>
+                        <input type="text" id="first_name" class="form-control" formControlName="first_name">
+                        <small *ngIf="customerForm.controls.contacts.controls[i].controls.first_name.hasError('required') && (customerForm.controls.contacts.controls[i].controls.first_name.touched|| formSubmited)" class="text-danger">
+                            First Name is required.
+                        </small>
+                        <small *ngIf="!customerForm.controls.contacts.controls[i].controls.first_name.hasError('required') && customerForm.controls.contacts.controls[i].controls.first_name.hasError('noWhitespace') && customerForm.controls.contacts.controls[i].controls.first_name.touched" class="error">Remove white space.</small>
+                        <small *ngFor="let error of error.contacts" class="text-danger">{{error.first_name}}</small>
+                    </div>
+                    <div class="col-md-3 m-btm10">
+                        <label for="last_name">Last Name</label>
+                        <input type="text" id="last_name" class="form-control" formControlName="last_name">
+                    </div>
+                    <div class="col-md-3 m-btm10">
+                        <label for="department">Department</label>
+                        <input type="text" id="department" class="form-control" formControlName="department">
+                    </div>
+                    <div class="pull-left">
+                    </div>
+                </div>
+                <div class="row m-btm15" [formGroupName]="i">
+                    <div class="col-md-3 m-btm10">
+                        <label for="inputSuccess">Email <small class="text-danger">*</small></label>
+                        <input type="text" id="email" class="form-control" formControlName="email">
+                        <small *ngIf="customerForm.controls.contacts.controls[i].controls.email.hasError('required') && (customerForm.controls.contacts.controls[i].controls.email.touched|| formSubmited)" class="error">Email address is required.</small>
+                        <small *ngIf="!customerForm.controls.contacts.controls[i].controls.email.hasError('required') && customerForm.controls.contacts.controls[i].controls.email.hasError('validateEmail') && customerForm.controls.contacts.controls[i].controls.email.touched" class="error">Invalid email address.</small>
+                    </div>
+                    <div class="col-md-3 m-btm10">
+                        <label for="inputSuccess">Phone</label>
+                        <input [textMask]="{mask: mask}" type="text" id="phone" class="form-control" formControlName="phone">
+                    </div>
+                    <div class="col-md-3 m-btm10">
+                        <label for="inputSuccess">Fax</label>
+                        <input [textMask]="{mask: mask}" type="text" id="fax" class="form-control" formControlName="fax">
+                    </div>
+                    <div class="col-md-3 m-btm10">
+                        <label>&nbsp;&nbsp;</label>
+                        <label class="checkbox-inline custom-checkbox nowrap m-top30">
+                            <input type="checkbox" (change)="isDefaultCheck(i, $event, 'contacts')" formControlName="is_default" >
+                            <span>Is Default</span>
+                        </label>
+                    </div>
+                </div>
+
+            </div>
+            <a href="javascript:;" (click)="addContact()" class="add-link">+ Add Contact</a>
+        </div>
+        <div class="row">
+            <div class="col-md-12 m-btm10">
+                <div class="panel-heading bg-dark">Address</div>
+            </div>
+            <div id="shipping-address-container" class="col-md-6" formArrayName="shipping_addresses">
+                <div id="shipping-address-container-1" *ngFor="let shipping_address of customerForm.controls.shipping_addresses.controls; let i=index">
+                    <div [formGroupName]="i">
+                    <div class="bordered-block">
+                        <h6>Shipping Address {{i+1}} <i [ngClass]="{'invisible': (i==0)}" class="fa fa-trash" (click)="deleteShippingAddress(i)" title="Remove"><span>Remove</span></i></h6>
+                            <div class="row m-btm10">
+                                <div class="col-md-12">
+                                    <label for="name">Company Name</label>
+                                    <input id="name" formControlName="name" type="text" class="form-control">
+                                    <div *ngIf="error.shipping_addresses &&error.shipping_addresses[i].name">
+                                        <small *ngFor="let error of error.shipping_addresses[i].name" class="text-danger">{{error}}</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row m-btm10">
+                                <div class="col-md-12">
+                                    <label for="street_1">Address 1</label>
+                                    <input type="text" formControlName="street_1" id="street_1" class="form-control">
+                                    <div *ngIf="error.shipping_addresses &&error.shipping_addresses[i].street_1">
+                                        <small *ngFor="let error of error.shipping_addresses[i].street_1" class="text-danger">{{error}}</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row m-btm10">
+                                <div class="col-md-12">
+                                    <label for="street_2">Address 2</label>
+                                    <input type="text" formControlName="street_2" id="street_2" class="form-control">
+                                    <div *ngIf="error.shipping_addresses &&error.shipping_addresses[i].street_2">
+                                        <small *ngFor="let error of error.shipping_addresses[i].street_2" class="text-danger">{{error}}</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row m-btm10">
+                                <div class="col-md-6">
+                                    <label for="city">City</label>
+                                    <input type="text" formControlName="city" id="city" class="form-control">
+                                    <div *ngIf="error.shipping_addresses &&error.shipping_addresses[i].city">
+                                        <small *ngFor="let error of error.shipping_addresses[i].city" class="text-danger">{{error}}</small>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="state">State</label>
+                                    <div *ngIf="customerForm.controls.shipping_addresses.controls[i].controls.country.value == 'US' ||customerForm.controls.shipping_addresses.controls[i].controls.country.value == ''">
+                                        <select formControlName="state" id="state" class="form-control">
+                                            <option value="">Select</option>
+                                                <option *ngFor="let item of countryStateList.state" [value]="item.code" >{{item.name}}</option> 
+                                        </select>
+                                    </div>
+                                    <input formControlName="state_text" *ngIf="customerForm.controls.shipping_addresses.controls[i].controls.country.value != 'US' && customerForm.controls.shipping_addresses.controls[i].controls.country.value != ''" type="text" class="form-control">
+                                    <div *ngIf="error.shipping_addresses &&error.shipping_addresses[i].state">
+                                        <small *ngFor="let error of error.shipping_addresses[i].state" class="text-danger">{{error}}</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row m-btm10">
+                                <div class="col-md-6">
+                                    <label for="zip">Zip</label>
+                                    <input type="text" formControlName="zip" id="zip" class="form-control">
+                                    <div *ngIf="error.shipping_addresses &&error.shipping_addresses[i].zip">
+                                        <small *ngFor="let error of error.shipping_addresses[i].zip" class="text-danger">{{error}}</small>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="country">Country</label>
+                                    <select formControlName="country" id="country" (change)="onSelectChange($event, i, 'shipping_addresses')" class="form-control">
+                                        <option value="">Select</option>
+                                            <option *ngFor="let item of countryStateList.countries" [value]="item.code" >{{item.name}}</option> 
+                                    </select>
+                                    <div *ngIf="error.shipping_addresses &&error.shipping_addresses[i].country">
+                                        <small *ngFor="let error of error.shipping_addresses[i].country" class="text-danger">{{error}}</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row m-btm10">
+                                <div class="col-md-3 iradio">
+                                    <label class="checkbox-inline custom-checkbox nowrap">
+                                        <input type="checkbox" (change)="isDefaultCheck(i, $event, 'shipping_addresses')" formControlName="is_default" >
+                                        <span>Is Default</span>
+                                    </label>
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="checkbox-inline custom-checkbox nowrap">
+                                        <input type="checkbox" formControlName="is_residential" >
+                                        <span>Residential</span>
+                                    </label>
+                                    <div *ngIf="error.shipping_addresses &&error.shipping_addresses[i].is_residential">
+                                        <small *ngFor="let error of error.shipping_addresses[i].is_residential" class="text-danger">{{error}}</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <a href="javascript:;" (click)="addShippingAddress()" class="add-link">+ Add Shipping Address</a>
+            </div>
+            <div id="billing-address-container" class="col-md-6" formArrayName="billing_addresses">
+                <div *ngFor="let billing_address of customerForm.controls.billing_addresses.controls; let i=index">
+                    <div [formGroupName]="i">
+                        <div class="bordered-block">
+                            <h6>Billing Address {{i+1}} <i [ngClass]="{'invisible': (i==0)}" class="fa fa-trash" (click)="deleteBillingAddress(i)" title="Remove"><span>Remove</span></i>
+                        <label class="checkbox-inline custom-checkbox nowrap">
+                            <input type="checkbox" (change)="updateCheckedOptions(i, $event)" [checked]=state [value]="1">
+                            <span>Same As Shipping Address</span>
+                        </label>
+                            </h6>
+                            
+                            <div class="row m-btm10">
+                                <div class="col-md-12">
+                                    <label for="name">Company Name</label>
+                                    <input id="name" formControlName="name" type="text" class="form-control">
+                                    <div *ngIf="error.billing_addresses &&error.billing_addresses[i].name">
+                                        <small *ngFor="let error of error.billing_addresses[i].name" class="text-danger">{{error}}</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row m-btm10">
+                                <div class="col-md-12">
+                                    <label for="street_1">Address 1</label>
+                                    <input type="text" formControlName="street_1" id="street_1" class="form-control">
+                                    <div *ngIf="error.billing_addresses &&error.billing_addresses[i].street_1">
+                                        <small *ngFor="let error of error.billing_addresses[i].street_1" class="text-danger">{{error}}</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row m-btm10">
+                                <div class="col-md-12">
+                                    <label for="street_2">Address 2</label>
+                                    <input type="text" formControlName="street_2" id="street_2" class="form-control">
+                                    <div *ngIf="error.billing_addresses &&error.billing_addresses[i].street_2">
+                                        <small *ngFor="let error of error.billing_addresses[i].street_2" class="text-danger">{{error}}</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row m-btm10">
+                                <div class="col-md-6">
+                                    <label for="city">City</label>
+                                    <input type="text" formControlName="city" id="city" class="form-control">
+                                    <div *ngIf="error.billing_addresses &&error.billing_addresses[i].city">
+                                        <small *ngFor="let error of error.billing_addresses[i].city" class="text-danger">{{error}}</small>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="state">State</label>
+                                    <div *ngIf="customerForm.controls.billing_addresses.controls[i].controls.country.value == 'US' ||customerForm.controls.billing_addresses.controls[i].controls.country.value == ''">
+                                        <select formControlName="state" id="state" class="form-control">
+                                            <option value="">Select</option>
+                                                <option *ngFor="let item of countryStateList.state" [value]="item.code" >{{item.name}}</option> 
+                                        </select>
+                                    </div>
+                                    <input formControlName="state_text" *ngIf="customerForm.controls.billing_addresses.controls[i].controls.country.value != 'US' && customerForm.controls.billing_addresses.controls[i].controls.country.value != ''" type="text" class="form-control">
+                                    <div *ngIf="error.billing_addresses &&error.billing_addresses[i].state">
+                                        <small *ngFor="let error of error.billing_addresses[i].state" class="text-danger">{{error}}</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row m-btm10">
+                                <div class="col-md-6">
+                                    <label for="zip">Zip</label>
+                                    <input type="text" formControlName="zip" id="zip" class="form-control">
+                                    <div *ngIf="error.billing_addresses &&error.billing_addresses[i].zip">
+                                        <small *ngFor="let error of error.billing_addresses[i].zip" class="text-danger">{{error}}</small>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="country">Country</label>
+                                    <select formControlName="country" (change)="onSelectChange($event, i, 'billing_addresses')" id="country" class="form-control">
+                                        <option value="">Select</option>
+                                            <option *ngFor="let item of countryStateList.countries" [value]="item.code" >{{item.name}}</option> 
+                                    </select>
+                                    <div *ngIf="error.billing_addresses &&error.billing_addresses[i].country">
+                                        <small *ngFor="let error of error.billing_addresses[i].country" class="text-danger">{{error}}</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row m-btm10">
+                                <div class="col-md-6">
+                                    <label class="checkbox-inline custom-checkbox nowrap">
+                                        <input type="checkbox" (change)="isDefaultCheck(i, $event, 'billing_addresses')" formControlName="is_default" >
+                                        <span>Is Default</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <a href="javascript:;" (click)="addBillingAddress()" class="add-link">+ Add Billing Address</a>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <button type="submit" class="btn btn-primary">Save</button>
+            </div>
+        </div>
+    </div>
+</form>

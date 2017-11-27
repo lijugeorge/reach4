@@ -1,0 +1,15 @@
+{
+    "traffic": "Traffic Sales",
+    "Dashboard" : "Dashboard",
+    "Customers" : "Customers",
+    "Orders" : "Orders",
+    "Developments" : "Developments",
+    "Settings" :"Settings",
+    "Users" : "Users",
+    "Notifications" : "Notifications",
+    "Login" : "Login",
+    "Sign In to your account" : "Sign In to your account",
+    "Forgot password" : "Forgot password",
+    "Search" : "Search...",
+    "Unable to login with provided credentials." : "Unable to login with provided credentials."
+}

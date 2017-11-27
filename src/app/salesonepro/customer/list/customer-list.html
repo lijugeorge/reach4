@@ -1,0 +1,47 @@
+<div class="card">
+    <div class="card-body">
+        <button class="btn btn-primary m-btm10" (click)="addCustomer()" id="add_user">Add Customer</button>
+        <div [ngSwitch]="loading" class="pos-relative">
+            <div *ngSwitchCase="true">
+                <div class="ng-busy-backdrop"><app-spinner spinner="sk-wave"></app-spinner></div>
+            </div>
+            <app-table [totalResults]="customers.count" [columns]="columns" [config]="config" [data]="customers['results']" (tableChanged)="onChangeTable($event)">
+                <tbody table body *ngSwitchCase="false">
+                    <tr *ngFor="let customer of customers['results']; let i=index" (click)="trClick(customer.id, $event)">
+                        <td>{{i+start}}</td>
+                        <td class="text-left">{{customer.company_name}}</td>
+                        <td class="text-left">{{customer.company_code}}</td>
+                        <td class="text-left">{{customer.default_contact ? customer.default_contact.first_name+' '+customer.default_contact.last_name : ''}}</td>
+                        <td class="email">{{customer.default_contact ? customer.default_contact.email : ''}}</td>
+                        <td>{{customer.default_contact ? customer.default_contact.phone : ''}}</td>
+                        <td class="text-center">{{customer.last_order_date}}</td>
+                        <td class="text-center">{{customer.total_order_count}}</td>
+                        <td class="text-center">${{customer.total_order_amount}}</td>
+                        <td class="text-center actions">
+                            <ul class="list-inline">
+                                <li class="list-inline-item">
+                                    <a href="javascript:;" (click)="viewOrderHistory(customer.id)" placement="top" tooltip="Order History">
+                                        <i class="ion-android-cart"></i>
+                                    </a>
+                                </li>
+                                <li class="list-inline-item">
+                                    <a href="javascript:;" (click)="viewCustomer(customer.id)" placement="top" tooltip="View Detials">
+                                        <i class="ion-ios-browsers"></i>
+                                    </a>
+                                </li>
+                                <li class="list-inline-item">
+                                    <a href="javascript:;" (click)="editCustomer(customer.id)" placement="top" tooltip="Edit">
+                                        <i class="ion-edit"></i>
+                                    </a>
+                                </li>
+                            </ul>
+                        </td>
+                    </tr>
+                    <tr *ngIf="customers.count === 0">
+                        <td colspan="6">No data available in table</td>
+                    </tr>
+                </tbody>
+            </app-table>
+        </div>
+    </div>
+</div>

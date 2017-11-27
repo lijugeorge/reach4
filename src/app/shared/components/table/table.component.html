@@ -1,0 +1,29 @@
+<div class="row m-btm10">
+    <div class="col-md-4 table-search-wrap" *ngIf="config.search">
+        <input placeholder="Search" class="form-control" [formControl]="term" />
+    </div>
+    <div class="col-md-4 ">
+    </div>
+    <div class="col-md-4 text-right">
+            Show
+            <select class="form-control page-count" (change)="onChangeTable($event, 'row')">
+                <option *ngFor="let item of rows" [value]="item" >{{item}}</option>
+            </select>
+            entries
+    </div>
+</div>
+<div class="table-responsive"></div>
+<table class="table table-responsive table-hover table-outline mb-10">
+    <thead class="thead-default">
+        <tr>
+          <th *ngFor="let column of columns"
+  (click)="onChangeTable(column, 'sort')" ngClass="{{column.className || ''}}">
+              {{column.title}}
+              <i *ngIf="config.sorting && column.sort" class="fa pull-right "
+              [ngClass]="{'fa-sort-desc': column.sort === 'desc', 'fa-sort-asc': column.sort === 'asc'}"></i>
+          </th>
+        </tr>
+    </thead>
+    <ng-content select="[table][body]"></ng-content>
+</table>
+<ngb-pagination *ngIf="config.paging && results && results.length > 0" (pageChange)="onChangeTable($event, 'paging')" [collectionSize]="totalResults" [(page)]="tableData.page" [boundaryLinks]="true" [maxSize]="5"></ngb-pagination>

@@ -1,0 +1,21 @@
+<div class="sidebar">
+    <nav class="sidebar-nav">
+      <ul class="nav" *ngIf="items.length > 0">
+        <li *ngFor="let menuItem of items" class="nav-item" [ngClass]="{'nav-dropdown': (menuItem && !isEmptyObject(menuItem['children']))}" routerLinkActive="open" appNavDropdown>
+          <a *ngIf="menuItem && isEmptyObject(menuItem['children'])" class="nav-link" routerLinkActive="active" [routerLink]="['/'+menuItem.path]">
+            <i class="{{menuItem.icon}}"></i> {{menuItem.title | translate}}
+          </a>
+          <a *ngIf="menuItem && !isEmptyObject(menuItem['children'])" class="nav-link nav-dropdown-toggle" href="#" appNavDropdownToggle>
+              <i class="{{menuItem.icon}}"></i> {{menuItem.title | translate}}
+            </a>
+          <ul class="nav-dropdown-items" *ngIf="menuItem && !isEmptyObject(menuItem['children'])" >
+            <li class="nav-item" *ngFor="let child of menuItem.children">
+              <a class="nav-link" routerLinkActive="active" [routerLink]="['/'+menuItem.path+'/'+child.path]">
+                <i class="icon-puzzle"></i> {{child.title | translate}}
+              </a>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </nav>
+  </div>

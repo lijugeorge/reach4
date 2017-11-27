@@ -1,0 +1,11 @@
+<div class="row">
+    <div class="col-md-12">
+        <section class="card">
+            <header class="card-header">Edit Customer</header>
+            <div class="card-body">
+                <div *ngIf="success" id="success" class="alert alert-success">{{success}}</div>
+                 <app-customer-form [customer]="customer | async" [error]="error" [page]="page" (saved)="onSave($event)"></app-customer-form> 
+            </div>
+        </section>
+    </div>
+</div>

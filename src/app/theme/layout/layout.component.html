@@ -1,0 +1,21 @@
+<app-header></app-header>
+<div class="app-body">
+  <div [ngSwitch]="loading" class="pos-relative">
+    <div *ngSwitchCase="true">
+        <app-spinner spinner="sk-wave"></app-spinner>
+    </div>
+    <app-sidebar *ngSwitchCase="false"></app-sidebar>
+  </div>
+  <!-- Main content -->
+  <main class="main">
+    <!-- Breadcrumb -->
+    <ol class="breadcrumb">
+      <app-breadcrumbs></app-breadcrumbs>
+    </ol>
+    <div class="container-fluid">
+      <router-outlet><app-spinner  type="route"></app-spinner></router-outlet>
+    </div><!-- /.conainer-fluid -->
+  </main>
+  <app-aside></app-aside>
+</div>
+<app-footer></app-footer>

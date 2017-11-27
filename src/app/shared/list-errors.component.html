@@ -1,0 +1,7 @@
+<div class="alert alert-danger" *ngIf="formattedErrors.length > 0">
+  <p *ngFor="let error of errorList">
+    <ng-container *ngIf="error != ''">
+    {{ error }}
+    </ng-container>
+  </p>
+</div>

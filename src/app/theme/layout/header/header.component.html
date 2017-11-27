@@ -1,0 +1,17 @@
+<header class="app-header navbar">
+  <button class="navbar-toggler d-lg-none" type="button" appMobileSidebarToggler>&#9776;</button>
+  <a class="navbar-brand" href="#"></a>
+  <button class="navbar-toggler d-md-down-none" type="button" appSidebarToggler>&#9776;</button>
+  <ul class="nav navbar-nav ml-auto">
+    <li class="nav-item dropdown" ngbDropdown>
+      <a href class="nav-link dropdown-toggle" ngbDropdownToggle (click)="false">
+        <img src="{{currentUser.avatar_thumbnail ? currentUser.avatar_thumbnail : 'assets/img/avatars/avatar-1.png'}}" class="img-avatar" >
+        <span class="d-md-down-none">{{currentUser.first_name+' '+currentUser.last_name}}</span>
+      </a>
+      <div class="dropdown-menu dropdown-menu-right" aria-labelledby="simple-dropdown">
+        <a class="dropdown-item" href="#"><i class="fa fa-wrench"></i> Settings</a>
+        <a class="dropdown-item" href="#" (click)="logout()"><i class="fa fa-lock"></i> Logout</a>
+      </div>
+    </li>
+  </ul>
+</header>

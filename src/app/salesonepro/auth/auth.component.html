@@ -1,0 +1,40 @@
+<div class="app flex-row align-items-center">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-5">
+        <div class="login-form">
+          <div class="login-logo"><img src="assets/img/logo.svg"></div>
+          <div class="p-4">
+            <form [formGroup]="authForm" (ngSubmit)="submitForm()">
+              <app-spinner type="normal" [isSpinnerVisible]="isSubmitting"></app-spinner>
+              <div class="card-body">
+                <h2 class="text-center">{{ 'Sign In to your account' | translate }}</h2>
+                <list-errors [errors]="errors"></list-errors>
+                <div class="form-group">
+                  <div class="input-group">
+                    <input type="text" class="form-control" formControlName="username" placeholder="Username">
+                  </div>
+                  <small *ngIf="authForm.get('username').hasError('required') && (authForm.get('username').touched || isSubmitting)" class="text-danger">Username is required.</small>
+                </div>
+                <div class="form-group">
+                  <div class="input-group">
+                    <input type="password" class="form-control" formControlName="password" placeholder="Password">
+                  </div>
+                  <small *ngIf="authForm.get('password').hasError('required') && (authForm.get('password').touched || isSubmitting)" class="text-danger">Password is required.</small>
+                </div>
+                <div class="row">
+                  <div class="col-12">
+                    <button type="submit" class="btn btn-primary">{{ 'Login' | translate }}</button>
+                  </div>
+                  <div class="col-12 text-right">
+                    <button type="button" class="btn btn-link" >{{ 'Forgot Password' | translate }}</button>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

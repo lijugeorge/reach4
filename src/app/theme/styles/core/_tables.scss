@@ -1,0 +1,33 @@
+.table-outline {
+  border: 1px solid $table-border-color;
+
+  td {
+    vertical-align: middle;
+  }
+  tr:nth-child(2n) {
+    background: #FBFBFB;
+  }
+}
+
+.table-align-middle {
+
+  td {
+    vertical-align: middle;
+  }
+}
+
+.table-clear {
+  td {
+    border: 0;
+  }
+}
+.table thead th {
+  .fa.pull-right {
+    margin-top: 3px;
+  }
+}
+select.form-control.page-count {
+  display: inline-block;
+  width: 65px;
+  padding-left: 5px;
+}

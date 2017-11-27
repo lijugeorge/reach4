@@ -1,0 +1,44 @@
+.panel-heading {
+  font-weight: 400;
+  text-transform: uppercase;
+  padding: 15px;
+  color: #444444;
+  font-size: 16px;
+  &.bg-dark {
+    background: none !important;
+    color: #444444;
+    padding-left: 0;
+    text-transform: CAPITALIZE;
+    font-size: 16px;
+    border-top: 1px solid #ddd;
+    margin-top: 15px;
+  }
+}
+.contact_info_block,
+#shipping-address-container,
+#billing-address-container {
+  h6 {
+    font-size: 15px;
+    font-weight: 100;
+    .custom-checkbox {
+      font-size: 12px;
+    }
+    .fa {
+      float: right;
+      color: #484848;
+      cursor: pointer;
+      span {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        font-size: 12px;
+        margin-left: 2px
+      }
+    }
+  }
+}
+#shipping-address-container-1,
+.contact_info_block.bordered-block,
+#billing-address-container .bordered-block {
+    background: #f4f4f4;
+    padding: 20px;
+    margin-bottom: 10px;
+}
