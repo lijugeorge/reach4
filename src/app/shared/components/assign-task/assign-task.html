@@ -1,0 +1,50 @@
+<!-- Assign Task Popup -->
+
+<div class="modal-header">
+    
+    <h4 class="modal-title" *ngIf="!taskId">Assign Task</h4>
+    <h4 class="modal-title" *ngIf="taskId">Task Details</h4>
+    <button type="button" class="close" aria-label="Close" (click)="closeModel()">
+        <span aria-hidden="true">&times;</span>
+      </button>
+</div>
+<div class="modal-body">
+    <div *ngIf="success" class="alert alert-success">{{success}}</div>
+    <form [formGroup]="taskForm" (ngSubmit)="onSubmit(taskForm.value)" class="form-horizontal" method="post">
+        <div class="row m-btm10">
+            <div class="col-md-6">
+                <label for="agent">Agent
+                    <small class="text-danger">*</small>
+                </label>
+                <select *ngIf="!taskId" id="agent" class="form-control" [formControl]="taskForm.controls['agent']">
+                    <option value="">Select</option>
+                    <option *ngFor="let user of users" [value]="user.id">{{user.first_name+' '+user.last_name}}</option>
+                </select>
+                <p *ngIf="taskAgent" class="task-comment">{{taskAgent}}</p>
+                <small *ngIf="taskForm.controls['agent'].hasError('required') && (taskForm.controls['agent'].touched || formSubmited)" class="text-danger">Agent is required.</small>
+            </div>
+            <div class="col-md-6">
+                <label for="task_type">Task</label>
+                <select *ngIf="!taskId" id="task_type" class="form-control" [formControl]="taskForm.controls['task_type']">
+                    <option value="">Select</option>
+                    <option *ngFor="let item of taskOptions" [value]="item.id">{{item.name}}</option>
+                </select>
+                <p *ngIf="taskType" class="task-comment">{{taskType}}</p>
+            </div>
+        </div>
+
+        <div class="row m-btm10">
+            <div class="col-lg-12">
+                <label for="comments">Comments</label>
+                <quill-editor *ngIf="!taskId" [formControl]="taskForm.controls['comment']" [options]="editorOptions"></quill-editor>
+                <div class="task-comment" *ngIf="taskId" innerHTML="{{ taskComment }}">
+                </div>
+            </div>
+        </div>
+        <div class="row" *ngIf="!taskId">
+            <div class="col-md-4">
+                <button type="submit" class="btn btn-primary">Save</button>
+            </div>
+        </div>
+    </form>
+</div>

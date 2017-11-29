@@ -119,6 +119,24 @@ export class UserService {
     );
   }
 
+  getUsers(params: any): Observable<any> {
+    return this.apiService.get('/users', params)
+    .map(
+      data => {
+        return data;
+      }
+    );
+  }
+
+  getUserInfoById(id): Observable<any>  {
+    return this.apiService.get('/users/'+id)
+    .map(
+      data => {
+        return data;
+      }
+    );
+  }
+
   scheduleRefresh() {
     // If the user is authenticated, use the token stream
     // provided by angular2-jwt and flatMap the token

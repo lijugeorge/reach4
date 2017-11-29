@@ -7,11 +7,12 @@ import { HttpClientModule, HttpClient, HTTP_INTERCEPTORS } from '@angular/common
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-
+import { QuillEditorModule } from 'ng2-quill-editor';
 
 import { ListErrorsComponent } from './list-errors.component';
 import { TableComponent } from './components/table/table.component';
 import { SpinnerComponent } from './components/spinner/spinner.component';
+import { AssignTaskComponent } from './components/assign-task/assign-task.component';
 
 import { ShowAuthedDirective } from './show-authed.directive';
 
@@ -36,13 +37,15 @@ export function HttpLoaderFactory (http: HttpClient) {
           deps: [HttpClient]
       }
     }),
+    QuillEditorModule,
     NgbModule.forRoot()
   ],
   declarations: [
     ListErrorsComponent,
     SpinnerComponent,
     TableComponent,
-    ShowAuthedDirective
+    ShowAuthedDirective,
+    AssignTaskComponent
   ],
   exports: [
     CommonModule,
@@ -53,6 +56,7 @@ export function HttpLoaderFactory (http: HttpClient) {
     RouterModule,
     SpinnerComponent,
     TableComponent,
+    AssignTaskComponent,
     ShowAuthedDirective,
     TranslateModule,
     NgbModule

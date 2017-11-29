@@ -1,0 +1,41 @@
+
+
+
+<div class="card">
+    <div class="card-body">
+            <ngbd-modal-component [content]="'value'" [displayText]="'Demos'"  [footer]=""></ngbd-modal-component>
+        <div [ngSwitch]="loading" class="pos-relative">
+            <div *ngSwitchCase="true">
+                <div class="ng-busy-backdrop"><app-spinner spinner="sk-wave"></app-spinner></div>
+            </div>
+            <app-table [totalResults]="taskLists.count" [columns]="columns" [config]="config" [data]="taskLists.results" (tableChanged)="onChangeTable($event)">
+                <tbody table body *ngSwitchCase="false">
+                    <tr *ngFor="let request of taskLists.results; let i=index">
+                        <td>{{request.agent.first_name}} {{request.agent.last_name}}</td>
+                        <td>{{request.task_type ? request.task_type.name: ''}}</td>
+                        <td class="comment-field" (click)="assignTask(request.id,content, $event)" innerHTML="{{ request.comment | slice:0:50}}{{request.comment.length > 50 ? '...' : ''}}"></td>
+                        <td>{{request.customer.company_name}}</td>
+                        <td class="text-center">{{request.status}}</td>
+                        <td class="text-center">
+                            <a href="javascript:;" (click)="linkDetails(request.relation_id, request.relation_type)" placement="top"><span *ngIf="request.relation_type=='order'">Order</span><span *ngIf="request.relation_type=='development'">Dev</span> #{{request.relation_id}}</a>
+                        </td>
+                        <td>{{request.datetime_created | date:"short"}}</td>
+                        <td class="text-center">
+                            <ul class="list-inline">
+                                <li class="list-inline-item"><ngbd-modal-component [content]="request.agent.first_name"></ngbd-modal-component><a href="javascript:;" (click)="closeTask(request)" placement="top" tooltip="Close"><i class="ion-close-circled">c</i></a></li>
+                            </ul>
+                        </td>
+                    </tr>
+                    <tr *ngIf="taskLists.count === 0">
+                        <td colspan="6">No data available in table</td>
+                    </tr>
+                </tbody>
+            </app-table>
+        </div>
+    </div>
+</div>
+
+<!-- Assign Task Popup -->
+<ng-template #content>
+    <assign-task [taskId]="taskId" [modalRef]="modalRef"></assign-task>
+</ng-template>
