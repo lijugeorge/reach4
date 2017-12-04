@@ -1,0 +1,13 @@
+<div class="row">
+    <div class="col-md-12">
+        <section class="panel">
+            <header class="panel-heading panel-head">Edit User</header>
+            abc
+            <div class="panel-body">
+                <div class="row">
+                    <user-form [user]="user | async" [error]="error" [page]="page" (saved)="onSave($event)"></user-form>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>

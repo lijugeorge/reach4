@@ -1,0 +1,39 @@
+<div class="row">
+    <div class="col-md-12">
+        <section class="panel">
+            <header class="panel-heading panel-head">Users</header>
+            <div class="panel-body" [ngSwitch]="loading">
+                <button class="btn btn-theme-dark m-btm10" (click)="addUser()" id="add_user">Add User</button>
+                <div *ngSwitchCase="true">
+                    <app-spinner spinner="sk-wave"></app-spinner>
+                </div>
+                <div class="table-scroll" *ngIf="users">
+                    <app-table [totalResults]="users.count" [columns]="columns" [config]="config" [data]="users['results']"   (tableChanged)="onChangeTable($event)">
+                        <tbody table body *ngSwitchCase="false">
+                            <tr *ngFor="let user of users['results']; let i=index" (click)="trClick(user.id, $event)">
+                                <td>{{i+start}}</td>
+                                <td>{{user.first_name}} {{user.last_name}}</td>
+                                <td>{{user.email}}</td>
+                                <td>{{userGroupArray[user.groups[0]]}}</td>
+                                <td class="text-center">
+                                    <span class="label" [ngClass]="{'label-success': (user.is_active), 'label-danger': (!user.is_active)}">
+                                        {{user.is_active ? 'Active' : 'Inactive'}}
+                                    </span>
+                                </td>
+                                <td class="text-center">
+                                    <ul class="list-inline">
+                                        <li class="list-inline-item"><a href="javascript:;" (click)="editUser(user)" placement="top" tooltip="Edit"><i class="ion-edit"></i>e</a></li>
+
+                                    </ul>
+                                </td>
+                            </tr>
+                            <tr *ngIf="users.count === 0">
+                                <td colspan="5">No data available in table</td>
+                            </tr>
+                        </tbody>
+                    </app-table>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>

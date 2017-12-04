@@ -1,0 +1,80 @@
+                    <form [ngSwitch]="loading" [formGroup]="userForm" (ngSubmit)="onSubmit(userForm.value)" enctype="multipart/form-data" class="form-horizontal" method="post">
+                        <div *ngSwitchCase="true">
+                                <app-spinner spinner="sk-wave"></app-spinner>
+                        </div>
+                        <div class="row m-btm10">
+                        <div *ngSwitchCase="false">
+                            <div class="col-md-12">
+                                <div class="form-group col-md-6" [ngClass]="{'has-error':!userForm.controls['first_name'].valid && userForm.controls['first_name'].touched}">
+                                    <label class="col-md-4 control-label" for="first_name">First Name <small class="text-danger">*</small></label>
+                                    <div class="col-md-8">
+                                        <input [formControl]="userForm.controls['first_name']" type="text" class="form-control" value="" id="first_name" name="first_name">
+                                        <small *ngIf="userForm.controls['first_name'].hasError('required') && (userForm.controls['first_name'].touched || formSubmited)" class="error">You must include a first name.</small>
+                                        <small *ngFor="let error of error.first_name" class="text-danger">{{error}}</small>
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label class="col-md-4 control-label" for="last_name">Last Name</label>
+                                    <div class="col-md-8">
+                                        <input [formControl]="userForm.controls['last_name']" type="text" class="form-control" value="" id="last_name" name="last_name">
+                                        <small *ngFor="let error of error.last_name" class="text-danger">{{error}}</small>
+                                    </div>
+                                </div>
+                                <div class="clearfix"></div>
+                                <div class="form-group col-md-6" >
+                                    <label for="email" class="col-md-4 control-label">Email <small class="text-danger">*</small></label>
+                                    <div class="col-md-8">
+                                        <input [formControl]="userForm.controls['email']" type="email" class="form-control" id="email">
+                                        <small *ngIf="userForm.controls['email'].hasError('required') && (userForm.controls['email'].touched || formSubmited)" class="error">You must include a email address.</small>
+                                        <small *ngIf="!userForm.controls['email'].hasError('required') && userForm.controls['email'].hasError('validateEmail') && userForm.controls['email'].touched" class="error">Invalid email address.</small>
+                                        <small *ngFor="let error of error.email" class="text-danger">{{error}}</small>
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label class="col-md-4 control-label" for="password">Password <small *ngIf="page == 'add'" class="text-danger">*</small></label>
+                                    <div class="col-md-8">
+                                        <input [formControl]="userForm.controls['password']" type="password" class="form-control" id="password">
+                                        <small *ngIf="userForm.controls['password'].hasError('required') && (userForm.controls['password'].touched || formSubmited)" class="error">You must include a password.</small>
+                                        <small *ngIf="userForm.controls['password'].hasError('minlength') && userForm.controls['password'].touched" class="error">Password field must be at least 8 characters long.</small>
+                                        <small *ngFor="let error of error.password" class="text-danger">{{error}}</small>
+                                    </div>
+                                </div>
+                                <div class="clearfix"></div>
+                                <div class="form-group col-md-6">
+                                    <label for="user_group" class="col-md-4 control-label">User Type <small class="text-danger">*</small></label>
+                                    <div class="col-md-8">
+                                        <select class="form-control" id="user_group" [formControl]="userForm.controls['groups']">
+                                            <option *ngFor="let group of userGroups" [value]="group.id" >{{group.name}}</option>
+                                        </select>
+                                        <small *ngIf="userForm.controls['groups'].hasError('required') && (userForm.controls['groups'].touched || formSubmited)" class="error">You must select a user type.</small>
+                                        <small *ngFor="let error of error.groups" class="text-danger">{{error}}</small>
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label for="status" class="col-md-4 control-label">Status</label>
+                                    <div class="col-md-8">
+                                        <label class="checkbox-inline custom-checkbox nowrap">
+                                            <input [formControl]="userForm.controls['is_active']" type="checkbox">
+                                            <span>Active</span>
+                                          </label>
+                                    </div>
+                                </div>
+                                <div class="clearfix"></div>
+                                <div class="form-group col-md-6">
+                                    <label for="status" class="col-md-4 control-label">Avatar</label>
+                                    <div class="col-md-8">
+                                        <img src="{{user.avatar_thumbnail}}" *ngIf="user && user.avatar_thumbnail">
+                                        <input type="file" (change)="updated($event);" >
+                                        <small *ngFor="let error of error.avatar" class="text-danger">{{error}}</small>
+                                    </div>
+                                </div>
+                                <div class="clearfix"></div>
+                                <div class="form-group col-md-6">
+                                    <div class="offset-sm-4 col-sm-8">
+                                        <button  type="submit" class="btn btn-primary">Save</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        </div>
+                    </form>

@@ -1,0 +1,38 @@
+<div class="row">
+    <div class="col-md-12">
+        <section class="panel">
+            <header class="panel-heading panel-head">Notification Emails</header>
+            <div class="panel-body" [ngSwitch]="loading">
+                <button class="btn btn-theme-dark m-btm10" (click)="addNotificationEmail()" id="add_user">Add Notification Email</button>
+                <div *ngSwitchCase="true">
+                    <app-spinner spinner="sk-wave"></app-spinner>
+                </div>
+                <div class="table-scroll" *ngIf="notifications">
+                        <app-table [totalResults]="notifications.count" [columns]="columns" [config]="config" [data]="notifications['results']"   (tableChanged)="onChangeTable($event)">
+                        <tbody table body *ngSwitchCase="false">
+                            <tr *ngFor="let item of notifications['results']; let i=index" >
+                                <td>{{i+start}}</td>
+                                <td>{{item.email}}</td>
+                                <td>
+                                    <span *ngFor="let type of item.notification_types; let k=index">
+                                        <i *ngIf="k > 0">,</i>
+                                        {{notificationTypes[type]}}
+                                    </span>
+                                </td>
+                                <td class="text-center">
+                                    <ul class="list-inline">
+                                        <li class="list-inline-item"><a href="javascript:;" (click)="editNotificationEmail(item)" placement="top" tooltip="Edit"><i class="ion-edit"></i>E</a></li>
+                                        <li class="list-inline-item"><a href="javascript:;" (click)="deleteNotificationEmail(item)" placement="top" tooltip="Delete"><i class="ion-trash-a"></i>D</a></li>
+                                    </ul>
+                                </td>
+                            </tr>
+                            <tr *ngIf="notifications.count == 0">
+                                <td colspan="4">No data available in table</td>
+                            </tr>
+                        </tbody>
+                    </app-table>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>

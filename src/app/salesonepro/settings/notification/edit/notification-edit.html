@@ -1,0 +1,12 @@
+<div class="row">
+    <div class="col-md-12">
+        <section class="panel">
+            <header class="panel-heading panel-head">Edit Notification Email</header>
+            <div class="panel-body">
+                <div class="row">
+                    <notification-form [notification]="notification | async" [error]="error" [page]="page" (saved)="onSave($event)"></notification-form>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
