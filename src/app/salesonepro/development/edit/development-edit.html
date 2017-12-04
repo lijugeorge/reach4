@@ -1,0 +1,352 @@
+<div class="row">
+    <div class="col-md-12 art-request-wrap">
+        <section class="panel" [ngSwitch]="loading">
+            <form [formGroup]="developmentForm" (ngSubmit)="onDevelopmentFormSubmit(developmentForm.value)" class="form-horizontal" method="post">
+                <div class="panel-body">
+                    <div *ngSwitchCase="true">
+                        <app-spinner spinner="sk-wave"></app-spinner>
+                    </div>
+                    <div *ngSwitchCase="false">
+                        <header class="panel-heading panel-head">{{request.customer ? request.customer.company_name : ''}}</header>
+                        <div class="col-md-12">
+                            <ul class="summary_list">
+                                <li>
+                                    <div class="summary_label">Contact Name</div>
+                                    <div class="summary_value">{{request.customer.default_contact ? request.customer.default_contact.first_name+' '+request.customer.default_contact.last_name : ''}}</div>
+                                </li>
+                                <li>
+                                    <div class="summary_label">Email</div>
+                                    <div class="summary_value">{{request.customer.default_contact ? request.customer.default_contact.email : ''}}</div>
+                                </li>
+                                <li>
+                                    <div class="summary_label">Phone</div>
+                                    <div class="summary_value">{{request.customer.default_contact ? request.customer.default_contact.phone : ''}}</div>
+                                </li>
+                                <li>
+                                    <div class="summary_label">Sales Agent</div>
+                                    <div class="summary_value">{{request.sales_agent.first_name + ' ' + request.sales_agent.last_name}}</div>
+                                </li>
+                                <li>
+                                    <div class="summary_label">Artwork Agent</div>
+                                    <div class="summary_value">{{request.artwork_agent.first_name + ' ' + request.artwork_agent.last_name}}</div>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="col-md-12 order-accordion">
+                            <div class="card">
+                                <div class="card-header collapsed" data-toggle="collapse" data-target="#comments">
+                                    <h5 class="card-header-text">
+                                        Comments
+                                        <a href="javascript:;" class="pull-md-right" (click)="addNewComment(myModalComment)">Add Comment</a>
+                                    </h5>
+                                    <p class="no-margin toggle">
+                                        <span class="close toggle-btn">close <i class="pull-right ion-close"></i></span>
+                                        <span class="open toggle-btn">open <i class="pull-right ion-chevron-down"></i></span>
+                                        <small class="line-clamp line-clamp-2 m-top10" *ngIf="developmentComments.length > 0" innerHTML="{{ developmentComments[0].comment }}">
+                                        </small>
+                                    </p>
+                                </div>
+                                <div id="comments" class="row card-block collapse" >
+                                    <ul class="comments">
+                                        <li class="comment_child" *ngFor="let item of developmentComments">
+                                            <span class="name">{{item.agent.first_name+' '+item.agent.last_name}}</span>
+                                            <small class="timestamp">{{item.datetime_created}}</small>
+                                               <p innerHTML="{{ item.comment }}"> 
+                                                </p>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <div class="col-md-12">
+                        <div *ngIf="developmentSuccess" class="alert alert-success">{{developmentSuccess}}</div>
+                        <!-- <div class="alert alert-danger" *ngFor="let error of error.non_field_errors">{{error}}</div> -->
+                    </div>
+                    <div class="col-md-2">
+                        <label for="program">Program<small class="text-danger">*</small></label>
+                        <select class="form-control" [formControl]="developmentForm.controls['program']">
+                            <option value="">Select</option>
+                            <option *ngFor="let item of developmentOptions.program" [value]="item.id" >{{item.name}}</option>
+                        </select>
+                        <small *ngFor="let error of error.program" class="text-danger">{{error}}</small>
+                    </div>
+                    <div class="col-md-2">
+                        <label for="deadline">Delivery Deadline<small class="text-danger">*</small></label>
+                        <select class="form-control" [formControl]="developmentForm.controls['deadline']">
+                            <option value="">Select</option>
+                            <option *ngFor="let item of developmentOptions.development_deadline" [value]="item.id" >{{item.name}}</option>
+                        </select>
+                        <small *ngFor="let error of error.deadline" class="text-danger">{{error}}</small>
+                    </div>
+                    <div class="col-md-3" *ngIf="developmentForm.controls.deadline.value == '2'">
+                        <label for="deadline_date">Delivery Deadline Date</label>
+                        <my-date-picker id="deadline-date" [options]="myDatePickerOptions"
+                            (dateChanged)="onDateChanged($event)" [selDate]="request.deadline_date"></my-date-picker>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="status">Development Status<small class="text-danger">*</small></label>
+                        <ss-multiselect-dropdown class="form-control" [(ngModel)]="statusArr" [ngModelOptions]="{standalone: true}" [options]="developmentOptions.development_status" (click)="onChange()" [settings]="mySettings"></ss-multiselect-dropdown>
+                        <small *ngFor="let error of error.status" class="text-danger">{{error}}</small>
+                    </div>
+                    <div class="col-md-1">
+                        <button class="btn btn-primary m-top25">Save</button>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <div class="col-md-12">
+                        <div class="alert alert-success" *ngIf="orderSuccess!=''">{{orderSuccess}}</div>
+                    </div>
+                    <div class="col-md-12">
+                        <button type="button" class="btn btn-primary" (click)="createNewStyle(myModal)">Create New Style</button>
+                        <button type="button" class="btn btn-primary" (click)="addExistingStyle(stylelibary)">Add Existing Style</button>
+                        <a *ngIf="selectedStyleIds.length > 0" href="{{baseUrl+'/print_qoute'}}?{{styleUrl}}token={{token}}"><button type="button" class="btn btn-primary">Quick Quote</button></a>
+                        <button *ngIf="selectedStyleIds.length > 0" type="button" class="btn btn-primary" (click)="createOrder()">Create Order</button>
+
+                        <button type="button" class="btn btn-primary " (click)="assignTask(assigntask)">Assign Task</button>
+
+                        <div class="col-md-1 pull-md-right" *ngIf="showCloseDevelopmentForm">
+                            <button class="btn btn-primary">Save</button>
+                        </div>
+                        <div class="col-md-3 pull-md-right" *ngIf="showCloseDevelopmentForm">
+                            <select class="form-control" [formControl]="developmentForm.controls['close_reason']">
+                                <option value="">Select Reason</option>
+                                <option *ngFor="let item of developmentOptions.development_close_reasons" [value]="item.name" >{{item.name}}</option>
+                            </select>
+                        </div>
+                        <button type="button" class="btn btn-danger pull-md-right" (click)="closeDevelopment()">Close Development</button>
+                    </div>
+                </div>
+            </form>
+            <div class="panel-body" [ngSwitch]="styleLoading">
+                <div *ngSwitchCase="true">
+                    <app-spinner spinner="sk-wave"></app-spinner>
+                </div>
+                <div class="col-md-12" *ngSwitchCase="false">
+                    <div class="table-scroll">
+                        <table class="table table-bordered table-form">
+                            <thead>
+                                <tr>
+                                    <th>SELECT</th>
+                                    <th>RM#</th>
+                                    <th>STYLE NAME</th>
+                                    <th>ARTWORK APPROVAL DATE</th>
+                                    <th>ARTWORK STATUS</th>
+                                    <th class="text-center">ACTIONS</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let devStyle of developmentStyles; let i=index">
+                                    <td>
+                                        <label *ngIf="devStyle.style.status.id == 2" class="checkbox-inline custom-checkbox nowrap">
+                                            <input type="checkbox" (change)="updateCheckedOptions(i, devStyle, $event)">
+                                            <span> </span>
+                                        </label>
+                                    </td>
+                                    <td>{{devStyle.style.sku}}</td>
+                                    <td>{{devStyle.style.name}}</td>
+                                    <td>{{devStyle.style.approved_date}}</td>
+                                    <td>
+                                        <select class="form-control" (change)="onSelectChange($event, devStyle.style.id)">
+                                            <option *ngFor="let item of stylePriceOptions.status" [value]="item.id" [selected]="item.id === devStyle.style.status.id">{{item.name}}</option>
+                                        </select>
+                                    </td>
+                                    <td class="text-center">
+                                        <ul class="list-inline">
+                                            <li class="list-inline-item">
+                                                <a href="javascript:;" (click)="duplicateStyle(devStyle.style.id,myModal)" placement="top" tooltip="Duplicate"><i class="ion-document"></i>Du</a>
+                                            </li>
+                                            <li class="list-inline-item">
+                                                <a href="javascript:;" (click)="editStyle(devStyle.style.id, myModal)" placement="top" tooltip="Edit"><i class="ion-edit"></i>E</a>
+                                            </li>
+                                            <li class="list-inline-item">
+                                                <a href="javascript:;" (click)="deleteDevelopmentStyle(devStyle.id)" placement="top" tooltip="Delete"><i class="ion-trash-a"></i>D</a>
+                                            </li>
+                                        </ul>
+                                    </td>
+                                </tr>
+                                <tr *ngIf="length == 0">
+                                    <td colspan="7">No data available in table</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <ng-template #stylelibary>
+                <style-library *ngIf="this.customerId != ''" [success]="addDevStylesuccess" [reload]="reload" [development]="this.developmentId" [customer]="this.customerId" [buttonLabel]="buttonLabel" (saved)="addToDevelopment($event)" [modalRef]="modalRef"></style-library>
+            </ng-template>
+        </section>
+    </div>
+</div>
+<ng-template #assigntask>
+    <assign-task page="development" [relationId]="developmentId" (saved)="taskCreated($event)"  [modalRef]="modalRef"></assign-task>
+</ng-template>
+<!-- Style Form Popup -->
+<ng-template #myModal let-d="dismiss">
+    <div class="modal-header">
+        <h4 class="modal-title">{{popupLabel}} Style</h4>
+        <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body" >
+        <div *ngIf="success" id="success" class="alert alert-success">{{success}}</div>
+        <form [formGroup]="styleForm" (ngSubmit)="onSubmit(styleForm.value)" class="form-horizontal" method="post">
+            <div class="row m-btm10">
+                <div class="col-md-3">
+                    <label for="sku{{index}}">Style# <small class="text-danger">*</small></label>
+                    <input type="text" id="sku{{index}}" class="form-control" [formControl]="styleForm.controls['sku']" />
+                    <small *ngIf="styleForm.controls['sku'].hasError('required') && (styleForm.controls['sku'].touched || formSubmited)" class="text-danger">Style# is required.</small>
+                    <div *ngIf="error && error.sku">
+                        <small *ngFor="let error of error.sku" class="text-danger">{{error}}</small>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <label for="name">Customer Style#</label>
+                    <input type="text" id="name" class="form-control" [formControl]="styleForm.controls['customer_name']" />
+                </div>
+                <div class="col-md-3">
+                    <label for="name">Style Name</label>
+                    <input type="text" id="name" class="form-control" [formControl]="styleForm.controls['name']" />
+                </div>
+                <div class="col-md-3">
+                    <label for="status">Status <small class="text-danger">*</small></label>
+                    <select id="status" class="form-control" [formControl]="styleForm.controls['status']">
+                        <option value="">Select</option>
+                        <option *ngFor="let item of stylePriceOptions.status" [value]="item.id" >{{item.name}}</option>
+                    </select>
+                    <small *ngIf="styleForm.controls['status'].hasError('required') && (styleForm.controls['status'].touched || formSubmited)" class="text-danger">Status is required.</small>
+                </div>
+            </div>
+            <div class="row m-btm10">
+                <div class="col-md-3">
+                    <label for="style_type">Style Type  <small class="text-danger">*</small></label>
+                    <select id="style_type" class="form-control" [formControl]="styleForm.controls['style_type']">
+                        <option value="">Select</option>
+                        <option *ngFor="let item of stylePriceOptions.style_types" [value]="item.id" >{{item.name}}</option>
+                    </select>
+                    <small *ngIf="styleForm.controls['style_type'].hasError('required') && (styleForm.controls['style_type'].touched || formSubmited)" class="text-danger">Style Type is required.</small>
+                </div>
+                <div class="col-md-3">
+                    <label for="crown_fabric">Crown Fabric <small class="text-danger">*</small></label>
+                    <select id="crown_fabric" class="form-control" [formControl]="styleForm.controls['crown_fabric']">
+                        <option value="">Select</option>
+                        <option *ngFor="let item of stylePriceOptions.crown_fabric" [value]="item.id" >{{item.name}}</option>
+                    </select>
+                    <small *ngIf="styleForm.controls['crown_fabric'].hasError('required') && (styleForm.controls['crown_fabric'].touched || formSubmited)" class="text-danger">Crown fabric is required.</small>
+                </div>
+                <div class="col-md-3">
+                    <label for="visor_fabric">Visor Fabric <small class="text-danger">*</small></label>
+                    <select id="visor_fabric" class="form-control" [formControl]="styleForm.controls['visor_fabric']">
+                        <option value="">Select</option>
+                        <option *ngFor="let item of stylePriceOptions.visor_fabric" [value]="item.id" >{{item.name}}</option>
+                    </select>
+                    <small *ngIf="styleForm.controls['visor_fabric'].hasError('required') && (styleForm.controls['visor_fabric'].touched || formSubmited)" class="text-danger">Visor fabric is required.</small>
+                </div>
+                <div class="col-md-3">
+                    <label for="closure">Closure <small class="text-danger">*</small></label>
+                    <select id="closure" class="form-control" [formControl]="styleForm.controls['closure']">
+                        <option value="">Select</option>
+                        <option *ngFor="let item of stylePriceOptions.closures" [value]="item.id" >{{item.name}}</option>
+                    </select>
+                    <small *ngIf="styleForm.controls['closure'].hasError('required') && (styleForm.controls['closure'].touched || formSubmited)" class="text-danger">Closure is required.</small>
+                </div>
+            </div>
+            <div class="row m-btm10">
+                <div class="col-md-3">
+                    <label for="sizing">Sizing <small class="text-danger">*</small></label>
+                    <select id="sizing" class="form-control" [formControl]="styleForm.controls['sizing']">
+                        <option value="">Select</option>
+                        <option *ngFor="let item of stylePriceOptions.sizing" [value]="item.id" >{{item.name}}</option>
+                    </select>
+                    <small *ngIf="styleForm.controls['sizing'].hasError('required') && (styleForm.controls['sizing'].touched || formSubmited)" class="text-danger">Sizing is required.</small>
+                </div>
+                <div class="col-md-3">
+                    <label for="color">Color <small class="text-danger">*</small></label>
+                    <select id="color" class="form-control" [formControl]="styleForm.controls['color']">
+                        <option value="">Select</option>
+                        <option *ngFor="let item of stylePriceOptions.color" [value]="item.id" >{{item.name}}</option>
+                    </select>
+                    <small *ngIf="styleForm.controls['color'].hasError('required') && (styleForm.controls['color'].touched || formSubmited)" class="text-danger">Color is required.</small>
+                </div>
+            </div>
+            <div class="row m-btm10 m-top10" formArrayName="embellishments">
+                <div class="col-md-3" *ngFor="let embellishment of styleForm.controls.embellishments.controls; let i=index">
+                        <div  [formGroupName]="i">
+                            <div class="row m-btm10">
+                                <div class="col-md-12">
+                                    <label for="visor_fabric">Embellishment {{i+1}} <small class="text-danger">*</small> <i [ngClass]="{'invisible': (i==0)}" class="ion-close-round delete-btn" (click)="deleteEmbellishment(i)" title="delete"></i></label>
+                                    <select id="visor_fabric" class="form-control" formControlName="embellishment_type">
+                                        <option value="">Select</option>
+                                        <option *ngFor="let item of stylePriceOptions.embellishment_types" [value]="item.id" >{{item.name}}</option>
+                                    </select>
+                                    <small *ngIf="styleForm.controls.embellishments.controls[i].controls.embellishment_type.hasError('required') && (styleForm.controls.embellishments.controls[i].controls.embellishment_type.touched || formSubmited)" class="text-danger">
+                                    Embellishment type is required.
+                                    </small>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12" *ngIf="styleForm.controls.embellishments.controls[i].controls.embellishment_type.value == '2'">
+                                    <label>Additional Colors</label>
+                                    <input type="text" class="form-control" formControlName="data" />
+                                    <div *ngIf="error && error.embellishments && error.embellishments[i].data">
+                                        <small *ngFor="let error of error.embellishments[i].data" class="text-danger">{{error}}</small>
+                                    </div>
+                                </div>
+                                <div class="col-md-12" *ngIf="styleForm.controls.embellishments.controls[i].controls.embellishment_type.value == '12'">
+                                    <label>Additional Pieces</label>
+                                    <input type="text" class="form-control" formControlName="data" />
+                                    <div *ngIf="error && error.embellishments && error.embellishments[i].data">
+                                        <small *ngFor="let error of error.embellishments[i].data" class="text-danger">{{error}}</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                </div>
+            </div>
+
+            <div class="row m-btm10">
+                <div class="col-md-12">
+                    <button class="btn btn-primary" type="button" (click)="addEmbellishment()">Add Embellishment</button>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-4">
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</ng-template>
+
+<!-- Comment Form Popup -->
+<ng-template #myModalComment>
+    <div class="modal-header">
+        <h4 class="modal-title">{{popupLabel}} Comment</h4>
+        <button type="button" class="close" aria-label="Close" (click)="closeModel()">
+        <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body" >
+        <div *ngIf="success" id="success" class="alert alert-success">{{success}}</div>
+        <form [formGroup]="commentForm" (ngSubmit)="saveComment(commentForm.value)" class="form-horizontal" method="post">
+            <div class="row m-btm10">
+                <div class="col-lg-10">
+                    <label for="comment">Comments <small class="text-danger">*</small></label>
+                    <quill-editor [formControl]="commentForm.controls['comment']" [options]="editorOptions"></quill-editor>
+                    <small *ngIf="commentForm.controls['comment'].hasError('required') && (commentForm.controls['comment'].touched || formSubmited)" class="text-danger">Comment is required.</small>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</ng-template>

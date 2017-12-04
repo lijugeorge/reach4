@@ -111,10 +111,10 @@ export class AssignTaskComponent implements  OnInit, OnChanges{
         this.saved.emit(response);
         this.formSubmited = false;
         this.success = 'Task Assigned successfully!';
+        this.closeModel();
         setTimeout(function() {
           this.success = '';
           this.taskForm.reset();
-          jQuery('#assignTaskModal').modal('hide');
         }.bind(this), 3000);
       })
     }

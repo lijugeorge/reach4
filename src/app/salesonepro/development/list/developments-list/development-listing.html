@@ -1,0 +1,36 @@
+<div [ngSwitch]="loading" class="pos-relative">
+    <div *ngSwitchCase="true">
+        <div class="ng-busy-backdrop">
+            <app-spinner spinner="sk-wave"></app-spinner>
+        </div>
+    </div>
+    <app-table [totalResults]="developmentsPending.count" [columns]="columns" [config]="config" [data]="developmentsPending['results']">
+        <tbody table body *ngSwitchCase="false">
+            <tr *ngFor="let request of developmentsPending['results']; let i=index" (click)="trClick(request.id, $event)">
+                <td>{{request.customer.company_name}}</td>
+                <td>{{request.id}}</td>
+                <td>{{request.program.name}}</td>
+                <td>{{request.datetime_created}}</td>
+                <td *ngIf="user.groups[0] == 2 || user.groups[0] == 1">{{request.artwork_agent.first_name + ' ' + request.artwork_agent.last_name}}</td>
+                <td *ngIf="user.groups[0] == 3 || user.groups[0] == 1">{{request.sales_agent.first_name + ' ' + request.sales_agent.last_name}}</td>
+                <td class="text-center">
+                    <span class="label label-info" *ngIf="id==1">
+                        Pending
+                    </span>
+                    <span class="label label-primary" *ngIf="id==2">
+                        Progress
+                    </span>
+                    <span class="label label-info" *ngIf="id==5">
+                        Quote Pending
+                    </span>
+                    <span class="label label-primary" *ngIf="id==6">
+                        Quote Sent
+                    </span>
+                </td>
+            </tr>
+            <tr *ngIf="developmentsPending.count === 0">
+                <td colspan="6">No data available in table</td>
+            </tr>
+        </tbody>
+    </app-table>
+</div>

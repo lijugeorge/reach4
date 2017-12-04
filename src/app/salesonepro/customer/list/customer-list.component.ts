@@ -29,11 +29,12 @@ export class CustomerListComponent implements OnInit {
     paging: true,
     search: true,
     sorting: true,
-    className: ['table-bordered']
+    className: ['table-bordered'],
+    limit: true
   };
 
   loading: Boolean = true;
-
+  public start:number = 1;
   constructor(
     private router: Router,
     private customerService: CustomerService

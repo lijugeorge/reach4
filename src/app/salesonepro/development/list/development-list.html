@@ -1,0 +1,58 @@
+<div class="card">
+    <div class="card-body">
+        <div class="row m-btm10">
+            <div class="col-md-2">
+                <button class="btn btn-primary" type="button" (click)="createDevelopment()">Create New Development</button>
+            </div>
+            <div class="col-md-2 col-lg-3">
+                    <input placeholder="Search" (keyup)="onChangeTable($event.target.value)"/>
+                  </div>
+            <div class="col-md-2">
+                <select class="form-control" (change)="onSelectChange($event, 'Status')">
+                    <option value="">Select Status</option>
+                    <option *ngFor="let item of developmentOptions.development_status" [value]="item.id">{{item.name}}</option>
+                </select>
+            </div>
+            <div class="col-md-2" *ngIf="user && (user.groups[0] == 2 || user.groups[0] == 1)">
+                <select class="form-control" (change)="onSelectChange($event, 'Agent')">
+                    <option value="">Select Artwork Agent</option>
+                    <option *ngFor="let user of users" [value]="user.id">{{user.first_name+' '+user.last_name}}</option>
+                </select>
+            </div>
+            <div class="col-md-2" *ngIf="user.groups[0] == 3 || user.groups[0] == 1">
+                <select class="form-control" (change)="onSelectChange($event, 'SalesAgent')">
+                    <option value="">Select Sales Agent</option>
+                    <option *ngFor="let user of salesUsers" [value]="user.id">{{user.first_name+' '+user.last_name}}</option>
+                </select>
+            </div>
+        </div>
+        <div *ngIf="statusValue == 1 || !statusValue">
+            <div class="panel-heading panel-head" data-toggle="collapse" data-target="#dev-pending">Developments Artwork Pending</div>
+
+            <!-- <div class="collapse in pos-relative" id="dev-pending"> -->
+                <development-listing id=1 [agent]="agentId" [salesAgent]="salesAgentId" [search]="search"></development-listing>
+            <!-- </div> -->
+        </div>
+        <div *ngIf="statusValue == 2 || !statusValue">
+            <div class="panel-heading panel-head" data-toggle="collapse" data-target="#dev-progress">Developments Artwork In Progress</div>
+
+            <!-- <div class="collapse in pos-relative" id="dev-progress"> -->
+                <development-listing id=2 [agent]="agentId" [salesAgent]="salesAgentId" [search]="search"></development-listing>
+            <!-- </div> -->
+        </div>
+        <div *ngIf="statusValue == 5 || !statusValue">
+            <div class="panel-heading panel-head" data-toggle="collapse" data-target="#dev-completed">Developments Quote Pending</div>
+
+            <!-- <div class="collapse in pos-relative" id="dev-completed"> -->
+                <development-listing id=5 [agent]="agentId" [salesAgent]="salesAgentId" [search]="search"></development-listing>
+            <!-- </div> -->
+        </div>
+        <div *ngIf="statusValue == 6 || !statusValue">
+            <div class="panel-heading panel-head" data-toggle="collapse" data-target="#dev-closed">Developments Quote Sent</div>
+
+            <!-- <div class="collapse in pos-relative" id="dev-closed"> -->
+                <development-listing id=6 [agent]="agentId" [salesAgent]="salesAgentId" [search]="search"></development-listing>
+            <!-- </div> -->
+        </div>
+    </div>
+</div>

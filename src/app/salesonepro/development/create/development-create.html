@@ -1,0 +1,183 @@
+<div class="row">
+        <div class="col-md-12">
+            <section class="panel">
+                <header class="panel-heading panel-head">Create New Development</header>
+                <div class="panel-body" [ngSwitch]="loading">
+                    <div *ngSwitchCase="true">
+                        <app-spinner spinner="sk-wave"></app-spinner>
+                    </div>
+                    <div *ngIf="success"  class="alert alert-success">{{success}}</div>
+    
+                    <div class="row m-btm10" *ngIf="!customersId">
+                        <div class="col-md-3">
+                            <label><input id="inlineRadio1" (click)="addCustomer(1)" name="customer-select" type="radio" checked="checked" class="margin">
+                            Use Existing Customer</label>
+                        </div>
+                        <div class="col-md-3">
+                            <label>
+                            <input id="inlineRadio2" (click)="addCustomer(2)" name="customer-select" type="radio" class="margin">
+                            Add new Customer
+                            </label>
+                        </div>
+                    </div>
+    
+                    <form [formGroup]="developmentForm" (ngSubmit)="onSubmit(developmentForm.value)" class="form-horizontal" method="post">
+    
+                        <!-- Quick Customer -->
+                        <div *ngIf="addCustomerLabel">
+                             <div class="row m-btm10">
+                                <div class="col-md-8">
+                                    <div class="sub-heading">Customer Information</div>
+                                    <div class="col-md-6">
+                                        <label for="company_name">Company Name <small class="text-danger">*</small></label>
+                                        <input type="text" id="company_name" class="form-control" [formControl]="developmentForm.controls['customer'].controls['company_name']" />
+                                        <small *ngIf="developmentForm.controls['customer'].controls['company_name'].hasError('required') && (developmentForm.controls['customer'].controls['company_name'].touched || formSubmited)" class="text-danger">Company name is required.</small>
+                                        <small *ngIf="!developmentForm.controls['customer'].controls['company_name'].hasError('required') && developmentForm.controls['customer'].controls['company_name'].hasError('noWhitespace') && developmentForm.controls['customer'].controls['company_name'].touched" class="error">Remove white space.</small>
+                                        <small *ngFor="let error of error.company_name" class="text-danger">{{error}}</small>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="company_code">Company Id</label>
+                                        <input type="text" id="company_code" class="form-control" [formControl]="developmentForm.controls['customer'].controls['company_code']">
+                                        <small *ngFor="let error of error.company_code" class="text-danger">{{error}}</small>
+                                    </div>
+                                    <div class="clearfix"></div> 
+                                    <div class="col-md-6">
+                                        <label>First Name <small class="text-danger">*</small></label>
+                                        <input type="text" class="form-control" [formControl]="developmentForm.controls['customer'].controls['first_name']" />
+                                        <small *ngIf="developmentForm.controls['customer'].controls['first_name'].hasError('required') && (developmentForm.controls['customer'].controls['first_name'].touched || formSubmited)" class="text-danger">First name is required.</small>
+                                        <small *ngIf="!developmentForm.controls['customer'].controls['first_name'].hasError('required') && developmentForm.controls['customer'].controls['first_name'].hasError('noWhitespace') && developmentForm.controls['customer'].controls['first_name'].touched" class="error">Remove white space.</small>
+                                        <small *ngFor="let error of error.first_name" class="text-danger">{{error}}</small>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label>Last Name</label>
+                                        <input type="text" class="form-control" [formControl]="developmentForm.controls['customer'].controls['last_name']">
+                                        <small *ngFor="let error of error.last_name" class="text-danger">{{error}}</small>
+                                    </div>
+                                    <div class="clearfix"></div>
+                                    <div class="col-md-6">
+                                        <label>Department</label>
+                                        <input type="text" class="form-control" [formControl]="developmentForm.controls['customer'].controls['department']">
+                                        <small *ngFor="let error of error.department" class="text-danger">{{error}}</small>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label>Email Address <small class="text-danger">*</small></label>
+                                        <input type="text" class="form-control" [formControl]="developmentForm.controls['customer'].controls['email']">
+                                        <small *ngIf="developmentForm.controls['customer'].controls['email'].hasError('required') && (developmentForm.controls['customer'].controls['email'].touched || formSubmited)" class="text-danger">Email address is required.</small>
+                                        <small *ngIf="!developmentForm.controls['customer'].controls['email'].hasError('required') && (developmentForm.controls['customer'].controls['email'].hasError('validateEmail') && developmentForm.controls['customer'].controls['email'].touched)" class="error">Invalid email address.</small>
+                                        <small *ngFor="let error of error.email" class="text-danger">{{error}}</small>
+                                    </div>
+                                    <div class="clearfix"></div>
+                                    <div class="col-md-6">
+                                        <label>Phone</label>
+                                        <input type="text" class="form-control" [textMask]="{mask: mask}" [formControl]="developmentForm.controls['customer'].controls['phone']">
+                                        <small *ngFor="let error of error.phone" class="text-danger">{{error}}</small>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="credit_term">Terms <small class="text-danger">*</small></label>
+                                        <select id="credit_term" class="form-control" [formControl]="developmentForm.controls['customer'].controls['credit_term']">
+                                            <option value="">Select</option>
+                                            <option *ngFor="let item of orderOptions.credit_terms" [value]="item.id" >{{item.name}}</option>
+                                        </select>
+                                        <small *ngIf="developmentForm.controls['customer'].controls['credit_term'].hasError('required') && (developmentForm.controls['customer'].controls['credit_term'].touched|| formSubmited)" class="text-danger">Credit term is required.</small>
+                                        <small *ngFor="let error of error.credit_term" class="text-danger">{{error}}</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+    
+                        <div class="row m-btm10" *ngIf="!addCustomerLabel && !customersId ">
+                            <div class="col-md-8">
+                                <div class="sub-heading">Customer Information</div>
+                                <div class="col-md-12 autocomplete-wrap">
+                                    <label for="customer_id">Customer <small class="text-danger">*</small></label>
+                                    <input autofocus id="autocomplete" type="text" autocomplete="off" class="form-control" (keyup)="filter($event)"  />
+                                    <div class="autocomplete-list" *ngIf="customersList && customersList.length > 0">
+                                        <ul id="list-group" class="list-group group-list"  *ngIf="customersList && customersList.length > 0">
+                                            <li *ngFor="let customer of customersList" [class.active]="customer.selected" class="list-group-item item-list" (click)="select(customer, $event)">
+                                            {{ customer.company_name}}, {{customer.default_contact ? customer.default_contact.first_name+' '+customer.default_contact.last_name : ''}}
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <input type="hidden" class="form-control" [formControl]="developmentForm.controls['customer_id']"/>
+                                    <small *ngIf="(developmentForm.controls['customer_id'].hasError('required')) && (developmentForm.controls['customer_id'].touched || formSubmited)" class="text-danger">Please select a customer.</small>
+                                </div>
+                            </div>
+                        </div>
+    
+                        <div class="row m-btm10">
+                            <div class="col-md-8">
+                                <div class="sub-heading">Development Information</div>
+                                <div class="col-md-6">
+                                    <label for="artwork_agent">Artwork Agent <small class="text-danger">*</small></label>
+                                    <select id="artwork_agent" class="form-control" [formControl]="developmentForm.controls['artwork_agent']">
+                                        <option value="">Select</option>
+                                        <option *ngFor="let user of users" [value]="user.id" >{{user.first_name+' '+user.last_name}}</option>
+                                    </select>
+                                    <small *ngIf="developmentForm.controls['artwork_agent'].hasError('required') && (developmentForm.controls['artwork_agent'].touched || formSubmited)" class="text-danger">Artwork agent is required.</small>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="sales_agent">Sales Agent <small class="text-danger">*</small></label>
+                                    <select id="sales_agent" class="form-control" [formControl]="developmentForm.controls['sales_agent']">
+                                        <option value="">Select</option>
+                                        <option *ngFor="let user of salesUsers" [value]="user.id" >{{user.first_name+' '+user.last_name}}</option>
+                                    </select>
+                                    <small *ngIf="developmentForm.controls['sales_agent'].hasError('required') && (developmentForm.controls['sales_agent'].touched || formSubmited)" class="text-danger">Sales agent is required.</small>
+                                </div>
+                                <div class="clearfix"></div>
+                                <div class="col-md-6">
+                                    <label for="program">Program <small class="text-danger">*</small></label>
+                                    <select id="program" class="form-control" [formControl]="developmentForm.controls['program']">
+                                        <option *ngFor="let item of developmentOptions.program" [value]="item.id" >{{item.name}}</option>
+                                    </select>
+                                    <small *ngIf="developmentForm.controls['program'].hasError('required') && (developmentForm.controls['program'].touched || formSubmited)" class="text-danger">Program is required.</small>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="status">Development Status <small class="text-danger">*</small></label>
+                                    <ss-multiselect-dropdown class="form-control" [(ngModel)]="optionsModel" [ngModelOptions]="{standalone: true}" [options]="developmentOptions.development_status" (ngModelChange)="onChange()" [settings]="mySettings"></ss-multiselect-dropdown>
+                                    <small *ngIf="developmentForm.controls['status'].hasError('required') && (developmentForm.controls['status'].touched || formSubmited)" class="text-danger">Development status is required.</small>
+                                </div>
+                                <div class="clearfix"></div>
+                                <div class="col-md-6">
+                                    <label for="deadline">Delivery Deadline <small class="text-danger">*</small></label>
+                                    <select id="deadline" class="form-control" [formControl]="developmentForm.controls['deadline']">
+                                        <option value="">Select</option>
+                                        <option *ngFor="let item of developmentOptions.development_deadline" [value]="item.id" >{{item.name}}</option>
+                                    </select>
+                                    <small *ngIf="developmentForm.controls['deadline'].hasError('required') && (developmentForm.controls['deadline'].touched || formSubmited)" class="text-danger">Delivery Deadline is required.</small>
+                                </div>
+                                <div class="col-md-6" *ngIf="developmentForm.controls.deadline.value == '2'">
+                                    <label for="deadline_date">Enter Date</label>
+                                    <!-- <input class="form-control"
+                                            name="dp" [formControl]="developmentForm.controls['deadline_date']" ngbDatepicker #d="ngbDatepicker" (ngModelChange)="onDateChanged($event)" id="date">
+                                    
+                                    <button class="input-group-addon" (click)="d.toggle()" type="button">
+                                    d
+                                    </button> -->
+                                    <!-- <ngb-datepicker #dp [formControl]="developmentForm.controls['deadline_date']" (navigate)="date = $event.next" (ngModelChange)="onDateChanged($event)"></ngb-datepicker> -->
+                                    <my-date-picker id="deadline-date" [options]="myDatePickerOptions"
+                                    (dateChanged)="onDateChanged($event)" [selDate]=""></my-date-picker>
+                                    <div style="clear:both;"></div>
+                                    <small *ngIf="developmentForm.controls['deadline_date'].hasError('required') && (developmentForm.controls['deadline_date'].touched || formSubmited)" class="text-danger">Delivery Deadline is required.</small>
+                                </div>
+    
+                                <div class="col-md-12">
+                                    <label for="note">Comments</label>
+                                    <quill-editor
+                      [formControl]="developmentForm.controls['note']"
+                      [options]="editorOptions"
+                      ></quill-editor>
+                                    <small *ngIf="developmentForm.controls['note'].hasError('required') && (developmentForm.controls['note'].touched || formSubmited)" class="text-danger">Comment is required.</small>
+                                </div>
+    
+                            </div>
+                        </div>
+                        <div class="row m-top10" *ngSwitchCase="false">
+                            <div class="col-md-4">
+                                <button type="submit" class="btn btn-primary">Save</button>
+                            </div>
+                        </div>
+                     </form>
+                </div>
+            </section>
+        </div>
+    </div>

@@ -4,7 +4,7 @@
     </div>
     <div class="col-md-4 ">
     </div>
-    <div class="col-md-4 text-right">
+    <div class="col-md-4 text-right" *ngIf="config.limit">
             Show
             <select class="form-control page-count" (change)="onChangeTable($event, 'row')">
                 <option *ngFor="let item of rows" [value]="item" >{{item}}</option>

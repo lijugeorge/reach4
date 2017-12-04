@@ -90,6 +90,14 @@ export class UserService {
         const delay = ((jwtExp - jwtIat) - refreshTokenThreshold) * 1000;
         sessionStorage.setItem('exp_delay', delay.toString())
         this.scheduleRefresh();
+        // Get country
+          this.getCountryStateList().subscribe(response => {
+            sessionStorage.setItem('countryStateList', JSON.stringify(response));
+        });
+        // Get Orderoptions
+        this.getOrderOptions().subscribe(response => {
+            sessionStorage.setItem('orderOptions', JSON.stringify(response));
+        });
         return data;
       }
     );
@@ -227,5 +235,19 @@ export class UserService {
         return data;
       }
     );
+  }
+
+  getCountryStateList(): Observable<any> {
+    return this.apiService.get('/country_state_list')
+      .map(data => {
+        return data
+      });
+  }
+
+  getOrderOptions(): Observable<any>  {
+    return this.apiService.get('/order_options/')
+    .map(data => {
+      return data
+    });
   }
 }

@@ -120,10 +120,10 @@ export class TaskListComponent implements OnInit {
 
   linkDetails(id, type) {
     if (type === 'development') {
-      this.router.navigate(['./admin/developments/edit/', id]);
+      this.router.navigate(['./developments/edit/', id]);
     }
     if (type === 'order') {
-      this.router.navigate(['./admin/orders/edit/', id]);
+      this.router.navigate(['./orders/edit/', id]);
     }
   }
 }

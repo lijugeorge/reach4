@@ -1,17 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { SharedService } from '@shared/index';
 @Component({
-  selector: 'app-customer',
+  selector: 'app-development',
   template: '<router-outlet></router-outlet>'
 })
-export class CustomerComponent implements OnInit {
+export class DevelopmentComponent implements OnInit {
 
   constructor(
     private sharedService: SharedService
   ) { }
 
-  ngOnInit() {
-    
-  }
+  ngOnInit() { }
 
 }

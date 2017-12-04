@@ -1,0 +1,56 @@
+<!-- Style Library Popup -->
+
+<div class="modal-header">
+    <h4 class="modal-title">Style Library</h4>
+    <button type="button" class="close" aria-label="Close" (click)="closeModel()">
+        <span aria-hidden="true">&times;</span>
+      </button>
+</div>
+<div class="modal-body">
+    <!-- <div *ngIf="success" class="alert alert-success">{{success}}</div>
+    <div class="row m-btm10">
+        <div class="col-md-4">
+        <input *ngIf="config.filtering" placeholder="Search"
+                [ngTableFiltering]="config.filtering"
+                class="form-control"
+                (tableChanged)="onChangeTable(config)"/>
+        </div>
+        <div class="col-md-3 pull-md-right">
+        <div class="col-md-6">
+            <select class="form-control" (change)="onSelectChange($event)">
+                <option *ngFor="let item of rows" [value]="item" >{{item}}</option>
+            </select>
+        </div>
+        <div class="col-md-6 m-top10 no-padding text-right">
+            records per page
+        </div>
+        </div>
+    </div> -->
+    <div class="pos-relative" [ngSwitch]="tableLoading">
+        <div *ngSwitchCase="true">
+            <app-spinner spinner="sk-wave"></app-spinner>
+        </div>
+        <div class="table-scroll" *ngIf="allStyles">
+            <app-table [totalResults]="allStyles.count" [columns]="columns" [config]="config" (tableChanged)="onChangeTable($event)">
+                <tbody table body *ngSwitchCase="false">
+                    <tr *ngFor="let style of allStyles.results; let i=index" >
+                        <td>
+                            {{i+start}}
+                        </td>
+                        <td>{{style.sku}}</td>
+                        <td>{{style.name}}</td>
+                        <td>{{style.approved_date}}</td>
+                        <td>{{style.status.name}}</td>
+                        <td>
+                            <a href="javascript:;" (click)="addToParent(style)">{{buttonLabel}}</a>
+                        </td>
+                    </tr>
+                    <tr *ngIf="allStyles.count === 0">
+                        <td colspan="6">No data available in table</td>
+                    </tr>
+                </tbody>
+            </app-table>
+        </div>
+    </div>
+</div>
+      

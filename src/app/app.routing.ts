@@ -30,6 +30,14 @@ export const AppRoutes: Routes = [
       loadChildren: coreRoute.customer
     },
     {
+      path: 'developments',
+      loadChildren: coreRoute.development
+    },
+    {
+      path: 'tasks',
+      loadChildren: coreRoute.tasks
+    },
+    {
       path: 'settings',
       loadChildren: coreRoute.settings
     },

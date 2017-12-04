@@ -147,10 +147,6 @@ export class DashboardComponent implements OnInit {
         this.customers = data;
       }
     );
-    // Get country
-    this.sharedService.getCountryStateList().subscribe(response => {
-      sessionStorage.setItem('countryStateList', JSON.stringify(response));
-    });
   }
 
   onChangeTable(changedData) {
