@@ -100,7 +100,4 @@ export class UserService {
             });
     }
 
-    private handleError(error: any) {
-        return Promise.reject(error.json());
-    }
 }

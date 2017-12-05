@@ -1,0 +1,18 @@
+<div class="row">
+    <div class="col-md-12">
+        <section class="tab_panel nav-justified order-list-wrap">
+            <div class="panel col-md-12 m-btm10 p-lft-none p-rgt-none">
+                <ul class="nav nav-tabs">
+                    <li [ngClass]="{'active': (activeTabIndex < 0)}" (click)="onSelectDashboard()"><a>Orders</a> </li>
+                    <li *ngFor="let item of orderTabs; let i=index" [ngClass]="{'active': (activeTabIndex == i)}" (click)="onSelect(item.id)">
+                        <a>
+                            Order #{{item.id}} <i class="ion-close-round m-lft5" (click)="removeTab(i)" title="close"></i>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <div class="clearfix"></div>
+            <router-outlet></router-outlet>
+        </section>
+    </div>
+</div>

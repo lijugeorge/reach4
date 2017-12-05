@@ -1,0 +1,31 @@
+            <div  [ngSwitch]="loading" *ngIf="orders"> 
+                <div *ngSwitchCase="true">
+                    <app-spinner spinner="sk-wave"></app-spinner>
+                </div>
+                <app-table [totalResults]="orders.count" [columns]="columns" [config]="config" [data]="orders['results']" (tableChanged)="onChangeTable($event)">
+                        <tbody table body *ngSwitchCase="false">
+                            <tr *ngFor="let request of orders['results']; let i=index" (click)="trClick(request.id, $event)">
+                                    <td>{{request.order_date}}</td>
+                                    <td>{{request.id}}</td>
+                                    <td>{{request.customer ? request.customer.company_name : ''}}</td>
+                                    <td>{{request.contact ? request.contact.first_name+' '+request.contact.last_name : ''}}</td>
+                                    <td>{{request.customer_po ? request.customer_po : ''}}</td>
+                                    <td *ngIf="status=='completed'">{{request.actual_shipping_date ? request.actual_shipping_date : ''}}</td>
+                                    <td *ngIf="status=='pending' || status=='production'">{{request.estimated_shipping_date ? request.estimated_shipping_date : ''}}</td>
+                                    <td *ngIf="status=='lost'">{{request.order_lost_reason ? request.order_lost_reason : ''}}</td>
+                                    <td class="text-center">{{request.total_qty ? request.total_qty : ''}}</td>
+                                    <td>{{request.managed_by ? request.managed_by.first_name+' '+request.managed_by.last_name : ''}}</td>
+                                    <td class="text-center">
+                                        <ul class="list-inline">
+                                            <li class="list-inline-item"><a href="javascript:;" (click)="editOrder(request.id)" placement="top" tooltip="Edit"><i class="ion-edit"></i></a></li>
+                                            <li class="list-inline-item"><a href="javascript:;" (click)="deleteOrder(request)" placement="top" tooltip="Delete"><i class="ion-trash-a">D</i></a></li>
+                                        </ul>
+                                    </td>
+                            </tr>
+                            <tr *ngIf="orders.count === 0">
+                                <td colspan="6">No data available in table</td>
+                            </tr>
+                        </tbody>
+                    </app-table>
+                </div>
+                

@@ -3,6 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule } from '@angular/router';
 import { ToastModule } from 'ng2-toastr/ng2-toastr';
+import {Ng2Webstorage} from 'ngx-webstorage';
 
 import { AppRoutes } from './app.routing';
 import { ThemeModule } from './theme/theme.module';
@@ -28,7 +29,8 @@ import {
     ToastModule.forRoot(),
     RouterModule.forRoot(AppRoutes, {useHash: true}),
     SharedModule,
-    ThemeModule
+    ThemeModule,
+    Ng2Webstorage
   ],
   providers: [
     ApiService,

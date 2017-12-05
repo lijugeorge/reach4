@@ -34,6 +34,10 @@ export const AppRoutes: Routes = [
       loadChildren: coreRoute.development
     },
     {
+      path: 'orders',
+      loadChildren: coreRoute.orders
+    },
+    {
       path: 'tasks',
       loadChildren: coreRoute.tasks
     },

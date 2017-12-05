@@ -7,7 +7,7 @@ import { HttpClientModule, HttpClient, HTTP_INTERCEPTORS } from '@angular/common
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { QuillEditorModule } from 'ng2-quill-editor';
+import { QuillEditorModule } from 'ngx-quill-editor';
 import { MultiselectDropdownModule } from 'angular-2-dropdown-multiselect';
 import { MyDatePickerModule } from 'mydatepicker';
 import { TextMaskModule } from 'angular2-text-mask';
@@ -17,6 +17,7 @@ import { TableComponent } from './components/table/table.component';
 import { SpinnerComponent } from './components/spinner/spinner.component';
 import { AssignTaskComponent } from './components/assign-task/assign-task.component';
 import { StyleLibraryComponent } from './components/style-library/style-library.component';
+import { OrderListComponent } from './components/order-list/order-list.component';
 
 import { ShowAuthedDirective } from './show-authed.directive';
 
@@ -53,7 +54,8 @@ export function HttpLoaderFactory (http: HttpClient) {
     TableComponent,
     ShowAuthedDirective,
     AssignTaskComponent,
-    StyleLibraryComponent
+    StyleLibraryComponent,
+    OrderListComponent
   ],
   exports: [
     CommonModule,
@@ -66,6 +68,7 @@ export function HttpLoaderFactory (http: HttpClient) {
     TableComponent,
     AssignTaskComponent,
     StyleLibraryComponent,
+    OrderListComponent,
     ShowAuthedDirective,
     TranslateModule,
     QuillEditorModule,

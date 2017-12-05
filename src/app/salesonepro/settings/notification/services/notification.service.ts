@@ -93,8 +93,5 @@ export class NotificationService {
                 }
             );
     }
-
-    private handleError(error: any) {
-        return Promise.reject(error.json());
-    }
+    
 }
